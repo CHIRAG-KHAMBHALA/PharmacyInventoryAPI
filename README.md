@@ -100,7 +100,7 @@ Automatically sets quantity to 0 for all expired medicines and logs each action.
 ---
 
 ## Database Schema
-## 🗄️ Database Schema
+
 
 ### Supplier
 
@@ -108,7 +108,7 @@ Automatically sets quantity to 0 for all expired medicines and logs each action.
 * **Name**
 * **ContactEmail**
 
----
+
 
 ### Medicine
 
@@ -121,7 +121,7 @@ Automatically sets quantity to 0 for all expired medicines and logs each action.
 * **CreatedAt**
 * **SupplierId** (FK → Supplier.Id)
 
----
+
 
 ### User
 
@@ -130,16 +130,16 @@ Automatically sets quantity to 0 for all expired medicines and logs each action.
 * **PasswordHash**
 * **Role**
 
----
 
-### 🔗 Relationships
+
+###  Relationships
 
 * One **Supplier** → Many **Medicines**
 * Each **Medicine** belongs to one **Supplier**
 
----
 
-### 🔐 Notes
+
+###  Notes
 
 * No direct FK between **User** and other tables
 * Role-based access handled using **JWT Claims**
