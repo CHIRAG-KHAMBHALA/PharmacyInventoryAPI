@@ -17,6 +17,7 @@ namespace PharmacyInventoryAPI.Controllers
         }
 
         [HttpGet("summary")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetSummary()
         {
             var summary = await _dashboardService.GetSummary();
@@ -24,6 +25,7 @@ namespace PharmacyInventoryAPI.Controllers
         }
 
         [HttpGet("stock-report")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetStockReport()
         {
             var report = await _dashboardService.GetStockReport();

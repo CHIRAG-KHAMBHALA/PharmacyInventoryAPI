@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PharmacyInventoryAPI.Data;
@@ -85,6 +85,17 @@ builder.Services.AddScoped<EmailService>();
 
 builder.Services.AddScoped<DashboardService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("SignalRPolicy", policy =>
+    {
+        policy.WithOrigins("https://localhost:7191")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 var app = builder.Build();
 app.UseExceptionHandler(err => err.Run(async context =>
 {
@@ -104,12 +115,14 @@ app.UseExceptionHandler(err => err.Run(async context =>
         }));
 }));
 
+
+app.UseStaticFiles();     
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
+app.UseCors("SignalRPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.MapHub<StockHub>("/hubs/stock");
-
 app.Run();

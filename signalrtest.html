@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>SignalR Low Stock Monitor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        #status {
+            color: green;
+            font-weight: bold;
+        }
+
+        #alerts div {
+            background: #FCEBEB;
+            border-left: 4px solid #E24B4A;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Pharmacy Stock Alert Monitor</h2>
+    <p>Status: <span id="status">Connecting...</span></p>
+    <h3>Live Alerts:</h3>
+    <div id="alerts"></div>
+
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("http://localhost:7191/hubs/stock")
+            .withAutomaticReconnect()
+            .build();
+
+        connection.on("LowStockAlert", (message) => {
+            const div = document.createElement("div");
+            div.textContent = new Date().toLocaleTimeString() + " — " + message;
+            document.getElementById("alerts").prepend(div);
+        });
+
+        connection.start()
+            .then(() => {
+                document.getElementById("status").textContent = "Connected!";
+            })
+            .catch(err => {
+                document.getElementById("status").textContent = "Failed: " + err;
+                document.getElementById("status").style.color = "red";
+            });
+    </script>
+</body>
+</html>

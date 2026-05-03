@@ -43,20 +43,20 @@ namespace PharmacyInventoryAPI.Services
         }
         public async Task<object> GetStockReport()
         {
-            var result = await _context.Database
-                .SqlQueryRaw<StockReportDto>(@"
-            SELECT 
-                s.Name AS SupplierName,
-                COUNT(m.Id) AS TotalMedicines,
-                SUM(m.Quantity) AS TotalStock,
-                SUM(CASE WHEN m.Quantity < 10 THEN 1 ELSE 0 END) 
-                    AS LowStockCount,
-                SUM(m.Price * m.Quantity) AS InventoryValue
-            FROM Suppliers s
-            LEFT JOIN Medicines m ON m.SupplierId = s.Id
-            GROUP BY s.Name
-            ORDER BY InventoryValue DESC
-        ").ToListAsync();
+            var result = await _context.Suppliers
+                .AsNoTracking()
+                .Select(s => new
+                {
+                    SupplierName = s.Name,
+                    TotalMedicines = s.Medicines.Count,
+                    TotalStock = s.Medicines.Sum(m => m.Quantity),
+                    LowStockCount = s.Medicines
+                        .Count(m => m.Quantity < 10),
+                    InventoryValue = s.Medicines
+                        .Sum(m => m.Price * m.Quantity)
+                })
+                .OrderByDescending(s => s.InventoryValue)
+                .ToListAsync();
 
             return result;
         }

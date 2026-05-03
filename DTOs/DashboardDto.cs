@@ -9,12 +9,5 @@
         public int TotalSuppliers { get; set; }
         public decimal TotalInventoryValue { get; set; }
     }
-    public class StockReportDto
-    {
-        public string SupplierName { get; set; } = string.Empty;
-        public int TotalMedicines { get; set; }
-        public int TotalStock { get; set; }
-        public int LowStockCount { get; set; }
-        public decimal InventoryValue { get; set; }
-    }
+  
 }

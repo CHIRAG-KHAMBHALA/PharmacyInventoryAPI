@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Pharmacy Stock Alert Monitor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        #status-box {
+            padding: 10px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .connected {
+            background: #EAF3DE;
+            color: #27500A;
+        }
+
+        .disconnected {
+            background: #FCEBEB;
+            color: #791F1F;
+        }
+
+        #alerts {
+            margin-top: 10px;
+        }
+
+        .alert-item {
+            background: #FCEBEB;
+            border-left: 4px solid #E24B4A;
+            padding: 12px 16px;
+            margin: 8px 0;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+
+        .alert-time {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        .no-alerts {
+            color: #888;
+            font-style: italic;
+        }
+
+        button {
+            padding: 8px 16px;
+            background: #E24B4A;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+            button:hover {
+                background: #A32D2D;
+            }
+    </style>
+</head>
+<body>
+    <h2>Pharmacy Stock Alert Monitor</h2>
+
+    <div id="status-box" class="disconnected">
+        Status: Connecting...
+    </div>
+
+    <button onclick="clearAlerts()">Clear Alerts</button>
+
+    <h3>Live Alerts:</h3>
+    <div id="alerts">
+        <p class="no-alerts" id="no-alert-msg">No alerts yet — waiting for low stock events...</p>
+    </div>
+
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("https://localhost:7191/hubs/stock")
+            .withAutomaticReconnect()
+            .build();
+
+        connection.on("LowStockAlert", (message) => {
+            document.getElementById("no-alert-msg").style.display = "none";
+
+            const wrapper = document.createElement("div");
+            wrapper.className = "alert-item";
+
+            const time = document.createElement("div");
+            time.className = "alert-time";
+            time.textContent = new Date().toLocaleTimeString();
+
+            const msg = document.createElement("div");
+            msg.textContent = message;
+
+            wrapper.appendChild(time);
+            wrapper.appendChild(msg);
+            document.getElementById("alerts").prepend(wrapper);
+        });
+
+        connection.onreconnecting(() => {
+            document.getElementById("status-box").textContent = "Status: Reconnecting...";
+            document.getElementById("status-box").className = "disconnected";
+        });
+
+        connection.onreconnected(() => {
+            document.getElementById("status-box").textContent = "Status: Reconnected!";
+            document.getElementById("status-box").className = "connected";
+        });
+
+        connection.onclose(() => {
+            document.getElementById("status-box").textContent = "Status: Disconnected";
+            document.getElementById("status-box").className = "disconnected";
+        });
+
+        connection.start()
+            .then(() => {
+                document.getElementById("status-box").textContent = "Status: Connected!";
+                document.getElementById("status-box").className = "connected";
+            })
+            .catch(err => {
+                document.getElementById("status-box").textContent = "Status: Failed — " + err;
+                document.getElementById("status-box").className = "disconnected";
+            });
+
+        function clearAlerts() {
+            document.getElementById("alerts").innerHTML =
+                '<p class="no-alerts" id="no-alert-msg">No alerts yet — waiting for low stock events...</p>';
+        }
+    </script>
+</body>
+</html>
