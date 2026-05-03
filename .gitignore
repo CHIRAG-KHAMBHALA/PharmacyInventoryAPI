@@ -17,4 +17,5 @@ Thumbs.db
 
 appsettings.Development.json
 appsettings.*.json
+appsettings.json
 !appsettings.json

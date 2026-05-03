@@ -27,7 +27,11 @@ namespace PharmacyInventoryAPI.Services
         }
 
         public async Task<PagedResult<Medicine>> GetAll(
-            string? category, string? search, int page = 1, int pageSize = 10)
+    string? category,
+    string? search,
+    int page = 1,
+    int pageSize = 10,
+    string? sortBy = null)
         {
             var query = _context.Medicines.AsNoTracking().AsQueryable();
 
@@ -37,8 +41,17 @@ namespace PharmacyInventoryAPI.Services
             if (!string.IsNullOrEmpty(search))
                 query = query.Where(m => m.Name.Contains(search));
 
-            var totalCount = await query.CountAsync();
+            // Sorting
+            query = sortBy switch
+            {
+                "name" => query.OrderBy(m => m.Name),
+                "price" => query.OrderBy(m => m.Price),
+                "quantity" => query.OrderBy(m => m.Quantity),
+                "expiryDate" => query.OrderBy(m => m.ExpiryDate),
+                _ => query.OrderBy(m => m.Id)
+            };
 
+            var totalCount = await query.CountAsync();
             var data = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
@@ -158,5 +171,12 @@ namespace PharmacyInventoryAPI.Services
             => await _context.Medicines.AsNoTracking()
                 .Where(m => m.ExpiryDate < DateTime.UtcNow)
                 .ToListAsync();
+
+        public async Task<List<Medicine>> GetExpiringSoon(int days = 30)
+    => await _context.Medicines.AsNoTracking()
+        .Where(m => m.ExpiryDate >= DateTime.UtcNow
+               && m.ExpiryDate <= DateTime.UtcNow.AddDays(days))
+        .OrderBy(m => m.ExpiryDate)
+        .ToListAsync();
     }
 }

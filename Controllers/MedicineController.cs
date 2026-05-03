@@ -22,12 +22,14 @@ namespace PharmacyInventoryAPI.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetAll(
-            [FromQuery] string? category,
-            [FromQuery] string? search,
-            [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 10)
+        [FromQuery] string? category,
+        [FromQuery] string? search,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string? sortBy = null)
         {
-            var result = await _medicineService.GetAll(category, search, page, pageSize);
+            var result = await _medicineService
+                .GetAll(category, search, page, pageSize, sortBy);
             return Ok(result);
         }
 
@@ -105,6 +107,14 @@ namespace PharmacyInventoryAPI.Controllers
         public async Task<IActionResult> GetExpired()
         {
             var medicines = await _medicineService.GetExpired();
+            return Ok(medicines);
+        }
+
+        [HttpGet("expiring-soon")]
+        public async Task<IActionResult> GetExpiringSoon(
+        [FromQuery] int days = 30)
+        {
+            var medicines = await _medicineService.GetExpiringSoon(days);
             return Ok(medicines);
         }
     }

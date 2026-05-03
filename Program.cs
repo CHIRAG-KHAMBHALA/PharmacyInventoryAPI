@@ -83,6 +83,8 @@ builder.Services.AddSignalR();
 
 builder.Services.AddScoped<EmailService>();
 
+builder.Services.AddScoped<DashboardService>();
+
 var app = builder.Build();
 app.UseExceptionHandler(err => err.Run(async context =>
 {
