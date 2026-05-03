@@ -100,6 +100,120 @@ Automatically sets quantity to 0 for all expired medicines and logs each action.
 ---
 
 ## Database Schema
+## 🗄️ Database Schema
+
+### Supplier
+
+* **Id** (PK)
+* **Name**
+* **ContactEmail**
+
+---
+
+### Medicine
+
+* **Id** (PK)
+* **Name**
+* **Category**
+* **Quantity**
+* **Price**
+* **ExpiryDate**
+* **CreatedAt**
+* **SupplierId** (FK → Supplier.Id)
+
+---
+
+### User
+
+* **Id** (PK)
+* **Username**
+* **PasswordHash**
+* **Role**
+
+---
+
+### 🔗 Relationships
+
+* One **Supplier** → Many **Medicines**
+* Each **Medicine** belongs to one **Supplier**
+
+---
+
+### 🔐 Notes
+
+* No direct FK between **User** and other tables
+* Role-based access handled using **JWT Claims**
+
+---
+
+## How to Run
+
+### Prerequisites
+- .NET 8 SDK
+- SQL Server (LocalDB works)
+- Visual Studio 2022
+
+### Steps
+
+1. Clone the repo
+```bash
+git clone https://github.com/chiragsk0106/PharmacyInventoryAPI.git
+cd PharmacyInventoryAPI
+```
+
+2. Update `appsettings.json`
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=PharmacyDB;Trusted_Connection=True;"
+  },
+  "Jwt": {
+    "Key": "YourSecretKeyMinimum32Characters",
+    "Issuer": "PharmacyAPI",
+    "Audience": "PharmacyUsers"
+  },
+  "Email": {
+    "SmtpHost": "smtp.gmail.com",
+    "SmtpPort": "587",
+    "FromEmail": "your-email@gmail.com",
+    "Password": "your-app-password"
+  }
+}
+```
+
+3. Apply migrations
+```bash
+dotnet ef database update
+```
+
+4. Run the project
+```bash
+dotnet run
+```
+
+5. Open Swagger UI
+https://localhost:7191/swagger
+
+6. Open SignalR test client
+https://localhost:7191/signalr-test.html
+
+---
+
+## Running Tests
+
+```bash
+dotnet test PharmacyInventoryAPI.Tests
+```
+
+5 unit tests — all passing:
+- Add medicine successfully
+- Get low stock medicines only
+- Delete returns false if not found
+- Correct category saved
+- Get expired medicines only
+
+---
+## 📁 Project Structure
 
 ```
 PharmacyInventoryAPI/
