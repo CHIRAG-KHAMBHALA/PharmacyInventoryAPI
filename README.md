@@ -100,12 +100,16 @@ Automatically sets quantity to 0 for all expired medicines and logs each action.
 ---
 
 ## Database Schema
+
+```
 PharmacyInventoryAPI/
+│
 ├── Controllers/
 │   ├── AuthController.cs
 │   ├── MedicineController.cs
 │   ├── SupplierController.cs
 │   └── DashboardController.cs
+│
 ├── Services/
 │   ├── AuthService.cs
 │   ├── MedicineService.cs
@@ -113,27 +117,38 @@ PharmacyInventoryAPI/
 │   ├── DashboardService.cs
 │   ├── EmailService.cs
 │   └── ExpiredMedicineJob.cs
+│
 ├── Models/
 │   ├── Medicine.cs
 │   ├── Supplier.cs
 │   └── User.cs
+│
 ├── DTOs/
 │   ├── AuthDto.cs
 │   ├── MedicineDto.cs
 │   ├── SupplierDto.cs
 │   ├── PaginationDto.cs
 │   └── DashboardDto.cs
+│
 ├── Data/
 │   └── AppDbContext.cs
+│
 ├── Hubs/
 │   └── StockHub.cs
+│
 ├── Migrations/
+│
 ├── wwwroot/
 │   └── signalr-test.html
+│
 ├── logs/
-└── Program.cs
-PharmacyInventoryAPI.Tests/
-└── MedicineServiceTests.cs
+│
+├── Program.cs
+│
+└── PharmacyInventoryAPI.Tests/
+    └── MedicineServiceTests.cs
+```
+
 
 ---
 
