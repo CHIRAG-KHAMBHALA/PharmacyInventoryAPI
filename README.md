@@ -70,14 +70,16 @@ manual stock tracking, missed expiry dates, and no real-time alerts.
 
 ## Role Permissions
 
-| Endpoint                     |        Admin | Pharmacist |
-| View medicines                        | ✅ | ✅ |
-| Low stock / Expired / Expiring soon   | ✅ | ✅ |
-| Add / Edit / Delete medicine          | ✅ | ❌ |
-| Update stock                          | ✅ | ✅ |
-| Supplier management                   | ✅ | ❌ |
-| Dashboard                             | ✅ | ❌ |
-| Register Admin                        | ✅ | ❌ |
+| Feature / Endpoint             | Admin  |  Pharmacist |
+| ------------------------------ | :---:  | :--------: |
+| View medicines                 |   ✅   |      ✅     |
+| Low stock / Expired / Expiring |   ✅   |      ✅     |
+| Add / Edit / Delete medicine   |   ✅   |      ❌     |
+| Update stock                   |   ✅   |      ✅     |
+| Supplier management            |   ✅   |      ❌     |
+| Dashboard                      |   ✅   |      ❌     |
+| Register Admin                 |   ✅   |      ❌     |
+
 
 ---
 
