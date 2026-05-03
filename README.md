@@ -100,3 +100,55 @@ Automatically sets quantity to 0 for all expired medicines and logs each action.
 ---
 
 ## Database Schema
+PharmacyInventoryAPI/
+├── Controllers/
+│   ├── AuthController.cs
+│   ├── MedicineController.cs
+│   ├── SupplierController.cs
+│   └── DashboardController.cs
+├── Services/
+│   ├── AuthService.cs
+│   ├── MedicineService.cs
+│   ├── SupplierService.cs
+│   ├── DashboardService.cs
+│   ├── EmailService.cs
+│   └── ExpiredMedicineJob.cs
+├── Models/
+│   ├── Medicine.cs
+│   ├── Supplier.cs
+│   └── User.cs
+├── DTOs/
+│   ├── AuthDto.cs
+│   ├── MedicineDto.cs
+│   ├── SupplierDto.cs
+│   ├── PaginationDto.cs
+│   └── DashboardDto.cs
+├── Data/
+│   └── AppDbContext.cs
+├── Hubs/
+│   └── StockHub.cs
+├── Migrations/
+├── wwwroot/
+│   └── signalr-test.html
+├── logs/
+└── Program.cs
+PharmacyInventoryAPI.Tests/
+└── MedicineServiceTests.cs
+
+---
+
+## Key Design Decisions
+
+- **Role hardcoded on server** — clients cannot self-assign Admin role
+- **AsNoTracking** on all read-only queries for performance
+- **DTO validation** with DataAnnotations on all input models
+- **Global exception handling** middleware for consistent error responses
+- **Dependency Injection** throughout — testable and maintainable
+- **Supplier-Medicine FK** — tracks medicine source for reorder workflow
+
+---
+
+## Author
+
+**Chirag Khambhala**   
+chiragsk0106@gmail.com
